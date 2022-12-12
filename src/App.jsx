@@ -27,13 +27,6 @@ export default function App() {
         const lineHeight = (refTextArt.current.clientHeight / heigth);
         const lineWidth = ((refTextArt.current.clientWidth) / width);
         const fontSize = lineHeight > lineWidth ? lineWidth : lineHeight;       
-        console.log({ 
-            fontSize: fontSize,
-            letterSpacing:0,lineHeight,
-            lineaLengthWidth: width,
-            container: refCanvas.current.clientWidth
-
-        }) 
         setLetterCss(prev => ({ 
             ...prev, 
             fontSize: fontSize,
@@ -44,19 +37,22 @@ export default function App() {
     }
 
     useEffect(_=>{
-        // const textArtWidth = document.querySelector("pre").getBoundingClientRect().width;
-        // const canvasWidth = refCanvas.current.clientWidth;
-        // const diff = Math.floor(textArtWidth) - Math.floor(canvasWidth);  
-        // console.log(Math.floor(textArtWidth) ,"  ", Math.floor(canvasWidth))
-        // if(diff <= 1 || diff >= 0) return;
-        // console.log("ok")
-        // setLetterCss(prev =>({...prev,mul: prev.mul + 0.1}))
+        const textArtWidth = document.querySelector("pre").getBoundingClientRect().width;
+        const canvasWidth = refCanvas.current.clientWidth;
+        const diff = Math.abs(Math.floor(textArtWidth) - Math.floor(canvasWidth));  
+        console.log(Math.floor(textArtWidth) ,"  ", Math.floor(canvasWidth))
+        if(diff <= 1 && diff >= 0) return;
+        const letterSpacing = (canvasWidth
+            - textArtWidth) / 
+            letterCss.lineaLengthWidth
+        setLetterCss(prev =>({...prev, letterSpacing}))
     },[letterCss])
 
 
     const styles = {
         fontSize: `${letterCss.fontSize}px`,
         lineHeight: `${letterCss.lineHeight}px`,
+        letterSpacing: `${letterCss.letterSpacing}px`,
     }
 
     return (
