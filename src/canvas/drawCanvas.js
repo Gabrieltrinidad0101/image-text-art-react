@@ -1,14 +1,6 @@
 class DrawCanvas {
     constructor(){
-        this.is_drawing = true;
-    }
-
-    resetToResolution(width, height) {
-        const widthPercentage = (width / this.clientCanvasWidth) * 100;
-        const heightPercentage = (height / this.clientCanvasHeight) * 100;
-        const resolutionWidth = widthPercentage / 100 * this.canvas.width;
-        const resolutionHight = heightPercentage / 100 * this.canvas.height;
-        return [resolutionWidth, resolutionHight];
+        this.is_drawing = false;
     }
 
     set set(canvas) {
@@ -32,18 +24,16 @@ class DrawCanvas {
     start(e){
         e.preventDefault();
         this.is_drawing = true;
-        const [x,y] = this.resetToResolution(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop)
         this.context.beginPath();
-        this.context.moveTo(x,y);
+        this.context.moveTo(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop);
     }
     
     draw(e){
         e.preventDefault();
         if(!this.is_drawing) return;
-        const [x,y] = this.resetToResolution(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop)
-        this.context.lineTo(x,y)
+        this.context.lineTo(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop)
         this.context.strokeStyle = "#00";
-        this.context.lineWidth = 10;
+        this.context.lineWidth = 30;
         this.context.lineCap = "round"
         this.context.lineJoin = "round"
         this.context.stroke();

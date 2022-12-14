@@ -10,9 +10,9 @@ export default function App() {
     const refTextArt = useRef();
     const refDrawCanvas = useRef();
     const [textArtHtml, setTextArtHtml] = useState("");
-    const [letterCss, setLetterCss] = useState({ fontSize: 10});
+    const [letterCss, setLetterCss] = useState({ fontSize: 10 });
 
-    useEffect(_ => { 
+    useEffect(_ => {
         imageCanvas.set = refImageCanvas.current;
         drawCanvas.set = refDrawCanvas.current;
     }, [])
@@ -25,10 +25,10 @@ export default function App() {
         srcImage.src = reader.result;
         await functionWait(srcImage, "onload");
         imageCanvas.setImage(srcImage)
-        imageCanvas.insertImage(refDrawCanvas.current)
     }
-    
+
     const convert = _ => {
+        imageCanvas.insertImage(refDrawCanvas.current)
         const textArt = imageCanvas.convertToText();
         const heigth = textArt.split("\n").length;
         const width = textArt.split("\n")[0].length;
@@ -84,7 +84,11 @@ export default function App() {
                         </div>
                         <div className='container-canvas'>
                             <canvas className='image-canvas' ref={refImageCanvas}></canvas>
-                            <canvas className='draw-canvas' ref={refDrawCanvas}></canvas>
+                            <canvas width={`${refImageCanvas.current?.clientWidth}px`}
+                                height={`${refImageCanvas.current?.clientHeight}px`}
+                                className='draw-canvas'
+                                ref={refDrawCanvas}
+                            ></canvas>
                         </div>
                     </div>
                 </div>

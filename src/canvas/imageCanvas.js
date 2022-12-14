@@ -37,7 +37,6 @@ class ImageCanvas {
     }
 
     insertImage(canvas2){
-        console.log(canvas2)
         this.context.drawImage(canvas2, 0, 0,this.canvas.width, this.canvas.height);
     }
 }
