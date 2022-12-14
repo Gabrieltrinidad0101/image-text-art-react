@@ -11,6 +11,11 @@ class Canvas {
         this.context.drawImage(image, 0, 0);
     }
 
+    setOld(canvasOld){
+        const canvas = canvasOld.current;
+        console.log(canvas);
+    }
+
     convertToText() {
         const image = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
         let breakLine = 1;
