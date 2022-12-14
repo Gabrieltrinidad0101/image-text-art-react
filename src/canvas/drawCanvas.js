@@ -3,8 +3,19 @@ class DrawCanvas {
         this.is_drawing = true;
     }
 
+    resetToResolution(width, height) {
+        const widthPercentage = (width / this.clientCanvasWidth) * 100;
+        const heightPercentage = (height / this.clientCanvasHeight) * 100;
+        const resolutionWidth = widthPercentage / 100 * this.canvas.width;
+        const resolutionHight = heightPercentage / 100 * this.canvas.height;
+        return [resolutionWidth, resolutionHight];
+    }
+
     set set(canvas) {
+        this.clientCanvasWidth = canvas.clientWidth
+        this.clientCanvasHeight = canvas.clientHeight
         this.canvas = canvas;
+
         this.context = this.canvas.getContext("2d")
         
         this.canvas.addEventListener("touchstart",e=>this.start(e),false)
@@ -21,17 +32,16 @@ class DrawCanvas {
     start(e){
         e.preventDefault();
         this.is_drawing = true;
+        const [x,y] = this.resetToResolution(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop)
         this.context.beginPath();
-        this.context.moveTo(e.clientX - this.canvas.offsetLeft,
-                       e.clientY - this.canvas.offsetTop)  
-        this.context.translate(0,0)
+        this.context.moveTo(x,y);
     }
     
     draw(e){
         e.preventDefault();
         if(!this.is_drawing) return;
-        this.context.lineTo(e.clientX - this.canvas.offsetLeft,
-                        e.clientY - this.canvas.offsetTop)
+        const [x,y] = this.resetToResolution(e.clientX - this.canvas.offsetLeft,e.clientY - this.canvas.offsetTop)
+        this.context.lineTo(x,y)
         this.context.strokeStyle = "#00";
         this.context.lineWidth = 10;
         this.context.lineCap = "round"
