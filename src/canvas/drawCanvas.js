@@ -46,6 +46,10 @@ class DrawCanvas {
         this.is_drawing = false;	
         this.context.closePath();
     }
+
+    clear(){
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    }
 }
 
 export default DrawCanvas

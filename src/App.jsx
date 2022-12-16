@@ -10,6 +10,8 @@ export default function App() {
     const refTextArt = useRef();
     const refDrawCanvas = useRef();
     const [textArtHtml, setTextArtHtml] = useState("");
+    const [resolution, setResolution] = useState(5);
+    const [disabled,setDisabled] = useState(false);
     const [letterCss, setLetterCss] = useState({ fontSize: 10 });
 
     useEffect(_ => {
@@ -24,12 +26,13 @@ export default function App() {
         await functionWait(reader, "onload")
         srcImage.src = reader.result;
         await functionWait(srcImage, "onload");
+        drawCanvas.clear();
         imageCanvas.setImage(srcImage)
     }
 
     const convert = _ => {
         imageCanvas.insertImage(refDrawCanvas.current)
-        const textArt = imageCanvas.convertToText();
+        const textArt = imageCanvas.convertToText(resolution);
         const heigth = textArt.split("\n").length;
         const width = textArt.split("\n")[0].length;
         const lineHeight = (refTextArt.current.clientHeight / heigth);
@@ -42,6 +45,16 @@ export default function App() {
             lineaLengthWidth: width
         }));
         setTextArtHtml(textArt);
+    }
+
+    const wait = time => new Promise(res=> setTimeout(_=>res(),time));
+
+    const ChangeResolution = async value =>{
+        setDisabled(true);
+        setResolution(resolution + value)
+        convert();
+        await wait(1000);
+        setDisabled(false);
     }
 
     useEffect(_ => {
@@ -73,6 +86,13 @@ export default function App() {
                         </div>
                         <button className="convert button-style button-79" onClick={convert} role="button">convert</button>
                         <button className='draw button-style' onClick={convert}>Draw</button>
+                        <div>
+                            <input type="range" max="30" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
+                            Resolution
+                            <button style={{width: "30px"}} onClick={_=>ChangeResolution(1)} disabled={disabled}>-</button>
+                            <h3>{10 - resolution}</h3>
+                            <button style={{width: "30px"}} onClick={_=>ChangeResolution(-1)} disabled={disabled}>+</button>
+                        </div>
                     </div>
                 </div>
                 <div className='image-container'>

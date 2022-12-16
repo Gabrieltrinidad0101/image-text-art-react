@@ -1,17 +1,34 @@
-class ImageCanvas {
+class ImageCanvas{
 
     set set(canvas) {
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d")
     }
 
-    setImage(image) {
-        this.canvas.width = image.width;
-        this.canvas.height = image.height;
-        this.context.drawImage(image, 0, 0);
+    clear(){
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     }
 
-    convertToText() {
+    changeResolution(resolution){
+        this.clear();
+        this.canvas.width /= resolution;
+        this.canvas.height /= resolution;
+        if(!this.image) return;
+        this.context.drawImage(this.image, 0, 0,this.canvas.width, this.canvas.height);
+    }
+
+    setImage(image) {
+        this.clear();
+        this.image = image ?? this.image;
+        if(this.image == undefined) return;
+        this.canvas.width = this.image.width;
+        this.canvas.height = this.image.height;
+        this.context.drawImage(this.image, 0, 0,this.canvas.width, this.canvas.height);
+    }
+
+    convertToText(resolution = 1 ) {
+        this.changeResolution(resolution / 5 || .1)
+        this.context.drawImage(this.canvas2, 0, 0,this.canvas.width, this.canvas.height);
         const image = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
         let breakLine = 1;
         let res = "";
@@ -21,6 +38,8 @@ class ImageCanvas {
             if (breakLine == this.canvas.width) { res += "\n"; breakLine = 0; };
             ++breakLine;
         }
+        this.changeResolution(resolution * .1);
+        this.setImage();
         return res
     }
 
@@ -37,7 +56,7 @@ class ImageCanvas {
     }
 
     insertImage(canvas2){
-        this.context.drawImage(canvas2, 0, 0,this.canvas.width, this.canvas.height);
+        this.canvas2 = canvas2;
     }
 }
 
