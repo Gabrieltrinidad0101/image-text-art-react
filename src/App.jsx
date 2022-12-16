@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import ImageCanvas from './canvas/imageCanvas';
 import DrawCanvas from './canvas/drawCanvas';
 import functionWait from './functionWait';
+import useDebounce from './customHooks/useDebounce/useDebounce';
 import "./app.css"
 const imageCanvas = new ImageCanvas();
 const drawCanvas = new DrawCanvas();
@@ -11,7 +12,6 @@ export default function App() {
     const refDrawCanvas = useRef();
     const [textArtHtml, setTextArtHtml] = useState("");
     const [resolution, setResolution] = useState(5);
-    const [disabled,setDisabled] = useState(false);
     const [letterCss, setLetterCss] = useState({ fontSize: 10 });
 
     useEffect(_ => {
@@ -47,20 +47,18 @@ export default function App() {
         setTextArtHtml(textArt);
     }
 
-    const wait = time => new Promise(res=> setTimeout(_=>res(),time));
+
+    useDebounce(()=> convert(), 1000, [resolution])
 
     const ChangeResolution = async value =>{
-        setDisabled(true);
-        setResolution(resolution + value)
-        convert();
-        await wait(1000);
-        setDisabled(false);
+        setResolution(value)
     }
 
     useEffect(_ => {
         const textArtWidth = document.querySelector("pre").getBoundingClientRect().width;
         const canvasWidth = refImageCanvas.current.clientWidth;
         const diff = Math.abs(Math.floor(textArtWidth) - Math.floor(canvasWidth));
+        console.log("ok")
         if (diff <= 1 && diff >= 0) return;
         const letterSpacing = (canvasWidth
             - textArtWidth) /
@@ -87,11 +85,7 @@ export default function App() {
                         <button className="convert button-style button-79" onClick={convert} role="button">convert</button>
                         <button className='draw button-style' onClick={convert}>Draw</button>
                         <div>
-                            <input type="range" max="30" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
-                            Resolution
-                            <button style={{width: "30px"}} onClick={_=>ChangeResolution(1)} disabled={disabled}>-</button>
-                            <h3>{10 - resolution}</h3>
-                            <button style={{width: "30px"}} onClick={_=>ChangeResolution(-1)} disabled={disabled}>+</button>
+                            <input type="range" max="100" min="10" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
                         </div>
                     </div>
                 </div>
@@ -103,7 +97,7 @@ export default function App() {
                             </h2>
                         </div>
                         <div className='container-canvas'>
-                            <canvas className='image-canvas' ref={refImageCanvas}></canvas>
+                            <canvas width="100px" height="100px" className='image-canvas' ref={refImageCanvas}></canvas>
                             <canvas width={`${refImageCanvas.current?.clientWidth}px`}
                                 height={`${refImageCanvas.current?.clientHeight}px`}
                                 className='draw-canvas'
