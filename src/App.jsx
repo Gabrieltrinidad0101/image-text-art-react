@@ -11,7 +11,7 @@ export default function App() {
     const refTextArt = useRef();
     const refDrawCanvas = useRef();
     const [textArtHtml, setTextArtHtml] = useState("");
-    const [resolution, setResolution] = useState(5);
+    const [resolution, setResolution] = useState(1);
     const [letterCss, setLetterCss] = useState({ fontSize: 10 });
 
     useEffect(_ => {
@@ -32,7 +32,7 @@ export default function App() {
 
     const convert = _ => {
         imageCanvas.insertImage(refDrawCanvas.current)
-        const textArt = imageCanvas.convertToText(resolution);
+        const textArt = imageCanvas.convertToText(parseInt(resolution));
         const heigth = textArt.split("\n").length;
         const width = textArt.split("\n")[0].length;
         const lineHeight = (refTextArt.current.clientHeight / heigth);
@@ -60,9 +60,7 @@ export default function App() {
         const diff = Math.abs(Math.floor(textArtWidth) - Math.floor(canvasWidth));
         console.log("ok")
         if (diff <= 1 && diff >= 0) return;
-        const letterSpacing = (canvasWidth
-            - textArtWidth) /
-            letterCss.lineaLengthWidth
+        const letterSpacing = (canvasWidth- textArtWidth) / letterCss.lineaLengthWidth
         setLetterCss(prev => ({ ...prev, letterSpacing }))
     }, [letterCss.letterSpacing])
 
@@ -85,7 +83,7 @@ export default function App() {
                         <button className="convert button-style button-79" onClick={convert} role="button">convert</button>
                         <button className='draw button-style' onClick={convert}>Draw</button>
                         <div>
-                            <input type="range" max="100" min="10" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
+                            <input type="range" max="15" min="1" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
                         </div>
                     </div>
                 </div>
