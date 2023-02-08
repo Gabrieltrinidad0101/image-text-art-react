@@ -11,7 +11,7 @@ export default function App() {
     const refTextArt = useRef();
     const refDrawCanvas = useRef();
     const [textArtHtml, setTextArtHtml] = useState("");
-    const [resolution, setResolution] = useState(1);
+    const [resolution, setResolution] = useState(15);
     const [letterCss, setLetterCss] = useState({ fontSize: 10 });
 
     useEffect(_ => {
@@ -83,6 +83,7 @@ export default function App() {
                         <button className="convert button-style button-79" onClick={convert} role="button">convert</button>
                         <button className='draw button-style' onClick={convert}>Draw</button>
                         <div>
+                            Resolution {16 - resolution}px
                             <input type="range" max="15" min="1" value={resolution} onChange={e=>ChangeResolution(e.target.value)}/>
                         </div>
                     </div>
