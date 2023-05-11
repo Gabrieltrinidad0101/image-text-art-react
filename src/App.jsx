@@ -58,11 +58,10 @@ export default function App() {
         const textArtWidth = document.querySelector("pre").getBoundingClientRect().width;
         const canvasWidth = refImageCanvas.current.clientWidth;
         const diff = Math.abs(Math.floor(textArtWidth) - Math.floor(canvasWidth));
-        console.log("ok")
         if (diff <= 1 && diff >= 0) return;
         const letterSpacing = (canvasWidth- textArtWidth) / letterCss.lineaLengthWidth
         setLetterCss(prev => ({ ...prev, letterSpacing }))
-    }, [letterCss.letterSpacing])
+    }, [textArtHtml])
 
 
     const styles = {
